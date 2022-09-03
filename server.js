@@ -4,6 +4,9 @@ import mongoose from 'mongoose';
 import Pusher from 'pusher';
 import Messages from './dbMessages.js';
 import cors from 'cors';
+import https from 'https';
+import path from 'path';
+import fs from 'fs';
 
 // app config
 const app = express();
@@ -88,5 +91,10 @@ app.post("/messages/new", (req, res) => {
     })
 })
 
+const sslServer = https.createServer ({
+    key: fs.readFileSync('./cert/key.pem'),
+    cert: fs.readFileSync('./cert/cert.pem'),
+}, app);
+
 // listen
-app.listen(port, ()=> console.log(`Listening on localhost:${port}`));
+sslServer.listen(port, () => console.log(`Listening on localhost:${port}`));
